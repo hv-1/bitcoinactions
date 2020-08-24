@@ -1,0 +1,11 @@
+Credits / Merits
+
+bitcoinactions.live
+
+Ajusted & expanded fom legacy txhighway.com (removed & changed critical stuff - contact me otherwise) to BSV / Twetch ,... by hv@moneybutton.com
+
+Thanks to planaria, whatsonchain, twetch, cors-proxy.htmldriven.com, btc.com, blockchain.info,,  Snap Tortoise's Konami.js, github pages,
+maplesyrupsucker & PorlyBe, Eli Afram for the superb metaphor, and the growing Bitcoin BSV (all Big Blocker) community of makers, developers, and supporters. 
+ - but still switched off also due to CORS issues. 
+
+Once turned back - for fun & educational purposes.

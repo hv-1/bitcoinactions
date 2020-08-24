@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=11" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>Bitcoin Actions Live Autobahn (beta)</title>
+  <meta content="Follow Bitcoin (BSV) actions visualizer." name="description">
+  <meta name="description" content="Follow Bitcoin Satoshi Vision (BSV) action live visualizer.">
+
+
+  <meta itemprop="name" content="Bitcoin Actions Live Autobahn">
+  <meta itemprop="description" content="Follow Bitcoin (BSV) actions live visualizer.">
+
+  <link href="style.css?v=1.25" rel="stylesheet" type="text/css">
+  <!-- link href="style.min.css?v=1.25" rel="stylesheet" type="text/css" -->
+  <link href="style.css?v=1.2" rel="stylesheet" type="text/css">
+  <link rel="author" href="humans.txt">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="icon" type="image/png" href="assets/bsv.jpg" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110960886-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-110960886-1');
+  </script>
+
+  <script>
+    // internet explorer check
+    function Check_Version() {
+      var rv = -1; // Return value assumes failure.
+      if (navigator.appName == 'Microsoft Internet Explorer') {
+        var ua = navigator.userAgent,
+          re = new RegExp("MSIE ([0-9]{1,}[\\.0-9]{0,})");
+        if (re.exec(ua) !== null) {
+          rv = parseFloat(RegExp.$1);
+        }
+      }
+      else if (navigator.appName == "Netscape") {
+        /// in IE 11 the navigator.appVersion says 'trident'
+        /// in Edge the navigator.appVersion does not say trident
+        if (navigator.appVersion.indexOf('Trident') === -1) rv = 12;
+        else rv = 11;
+      }
+      return rv;
+    }
+
+    if (Check_Version() < 12) alert("This application does not support Internet Explorer. Please use a different browser");
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+</head>
+
+<body>
+  <div id="loading"></div>
+  <div id="page">
+
+    <canvas id="renderCanvas"></canvas>
+
+<span class="lane-size park">Parking</span>
+    <span class="lane-size one">FEATURE</span>
+    <span class="lane-size two"></span>
+    <span class="lane-size three"></span>
+    <span class="lane-size four"></span>
+    <span class="lane-size five"></span>
+    <span class="lane-size six"></span>
+    <span class="lane-size seven"></span>
+    <span class="lane-size eight"></span>
+	<span class="lane-size nine"></span>
+	<span class="lane-size ten"></span>
+
+    <div class="bitCoin"></div>
+
+    <div class="road-bg"></div>
+
+ <div class="lane park"></div>
+    <div class="lane one"></div>
+    <div class="lane two"></div>
+    <div class="lane three"></div>
+    <div class="lane four"></div>
+    <div class="lane five"></div>
+    <div class="lane six"></div>
+    <div class="lane seven"></div>
+    <div class="lane eight"></div>
+    <div class="lane nine"></div>
+ 	<div class="lane ten"></div>
+
+    <div class="title">
+      <span class="live mobile-only mobile-live">BSV Near Time Actions</span>
+       <!-- img alt="Tx Autobahn Logo BCH BTC Visualizer" id="logo" src="assets/tx-Autobahn-logo.png" -->
+      <h2>Bitcoin BSV Action Autobahn (beta)</h2>
+
+    </div>
+
+
+    <div class="road-sign sign bitCoin-road-sign">
+      <div class="sign-border">
+        <h4 class="sign-title">Enterprise World
+          <br />Unlimted Capacity</h4>
+        <h5 class="highway-num">BSV</h5>
+        <div class="bitCoin-pool">
+          <span id="bitCoin-pool">UPDATING</span>TX in Transit
+          <h6>Estimated Action Fees
+            <span id="fees-cash">
+              0.0001 $</span>
+          </h6>
+
+          <span id="bitCoin-block">UPDATING</span>Last Block Nr
+          <h6>Block Size
+            <span id="bitCoin-size">updating x00mb</span>
+          </h6>
+
+          <span id="price_bitcoin">lookin for</span>Price Bitcoin BSV
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="whitepaper">
+      <a href="https://bitcoinsv.io/bitcoin.pdf" target="_blank" title="Whitepaper">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+      </a>
+    </div>
+
+ 
+
+    <div class="adspot ad-six ad-logo">
+      <a href="mailto:hv@moneybutton.com?subject=Purchase Ad Spot" title="Your Ad Here" target="_blank">
+        <h6>Your Ad Here</h6>
+		<img src="assets/sprites/twetch.svg"  height=40 width=90 id="spot6">
+      </a>
+    </div>
+
+ <canvas id="topCanvas"></canvas>
+
+  <div id="tw-wrap" style="right:-351px;">
+    <h4><span class="live">Near-Time</span> twetches</h4>
+    <ul id="twetch-list"></ul>
+  </div>
+
+  <div id="tx-wrap" style="right:-251px;">
+
+    <ul id="transactions"></ul>
+  </div>
+
+  <script src="js/konami.min.js"></script>
+  <script src="js/bitcoinactions.js?v=1.1"></script>
+  <script src="https://unpkg.com/@twetch/sdk@0.2.9/dist/twetch.min.js" type="text/javascript"></script>
+</body>
+
+</html>
