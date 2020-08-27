@@ -767,16 +767,16 @@ img.logo-label {
   top:53.35%;
 }
 .lane.seven {
-  top:59.72%;
+  top:59.92%;
 }
 .lane.eight {
-  top:66.12%;
+  top:66.42%;
 }
 .lane.nine {
   top:73.32%;
 }
 .lane.ten {
-  top:79.65%;
+  top:79.87%;
 }
 
 
@@ -793,7 +793,7 @@ img.logo-label {
   border: 2px solid rgb(255, 128, 128);
   border-radius: 10px;
   position: absolute;
-  right: 10%;
+  right: 2%;
   bottom: 35%;
   z-index: 99;
   width: 250px;
@@ -901,6 +901,7 @@ img.logo-label {
 
 .adspot.ad-one {
   left:12%;
+ bottom:1%;
 }
 
 /* planaria */
@@ -927,12 +928,12 @@ img.logo-label {
 
 /* vari */
 .adspot.ad-six {
-  left:59%;
+  left:58%;
   bottom:87%;
 }
 
 .adspot.ad-logo img{
-width:75px;
+width:72px;
 height:auto;
 }
 
@@ -1723,9 +1724,8 @@ input[type=range]:focus::-ms-fill-upper {
     bottom:10px;
     right:10px;
   }
-
   .bitCoin-road-sign {
-    right: 10px;
+    right: 5px;
     left: auto;
     bottom: auto;
   }
@@ -1734,22 +1734,18 @@ input[type=range]:focus::-ms-fill-upper {
     left:19%;
     right:auto;
   }
-
   .adspot.ad-two{
     left: auto;
     right: 25%;
   }
-
   .adspot.ad-two.ad-logo img {
     width:48px;
   }
-
   .adspot.ad-three {
     right:auto;
     left:15%;
     bottom: 5%;
   }
-
   .adspot.ad-four{
     left: auto;
     right: 15%;
@@ -1781,7 +1777,6 @@ input[type=range]:focus::-ms-fill-upper {
   table tr td img {
     max-height:25px;
   }
-
   .ln {
     background-size: cover;
     background-position: 0 0;
@@ -1791,6 +1786,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 @media screen and (max-width: 460px){
     .bitCoin-road-sign {
-      top: 60px;
+      top: 40px;
     }    
   }
