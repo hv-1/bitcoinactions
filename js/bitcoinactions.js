@@ -61,7 +61,7 @@ loadingGif.src = "assets/loading.gif";
 let WIDTH = null,
 	HEIGHT = null,
 	SINGLE_LANE = HEIGHT/15, // 15
-	SPEED = 6,
+	SPEED = 10,
 	SPEED_MODIFIER = 0.5,
 	PRICE_BITCOIN = 300;
 
@@ -361,9 +361,9 @@ function getPriceData(url, isBSV){
 						//console.log("Blocks - last array: " + last_blocks.length); 
 						
 						if (BSV_BLOCKS && last_blocks.length < 1) {
-							for (let i = 0; i<= 14; i++) {  // slowly get some block data...
+							for (let i = 0; i<= 11; i++) {  // slowly get some block data...
 								setTimeout(() => { 
-									fetch_block_data(BSV_BLOCKS - 14 + i);
+									fetch_block_data(BSV_BLOCKS - 11 + i);
 								}, 2000 * i);
 							}
 						}
@@ -552,6 +552,7 @@ function fetch_block_data (height) {
 					};
 					
 					last_blocks.push(item);
+					SPEED = 8;
 				//	let t = parseInt(bitCoinPoolInfo.textContent.replace(/\,/g,''));	  
 				//	bitCoinPoolInfo.textContent = formatWithCommas(t - res.size);
 				}
@@ -729,7 +730,6 @@ function createVehicle(type, txInfo, lane, isBitCoin){
 	} else if (memorySize > 5000) {
 		height = SINGLE_LANE * 1.4;
 		width = width*1.1;	
-		lane = lane -  SINGLE_LANE *.1;
 	}
 	
 	let item = {
@@ -949,6 +949,7 @@ function drawVehicles(arr){
 	let width = 0;
 	let isBitCoin = true;
 	let count = 0;
+	if (SPEED < 16) SPEED += posi/100000;
 	if (BOUNTY_VISIBLE) {
 		wrapText(ctx, "Collect with your special car >>", WIDTH - 220, BOUNTY_LANE*SINGLE_LANE+ SINGLE_LANE*.5, 80, 11);
 		ctx.drawImage(bounty, WIDTH - 150, BOUNTY_LANE*SINGLE_LANE+ SINGLE_LANE*.2, SINGLE_LANE*0.6 , SINGLE_LANE*0.6);
@@ -956,10 +957,11 @@ function drawVehicles(arr){
 		//console.log(' - *****  ' + last_blocks.length);
 		let last_with = 0;
 		for (let i = 0; i<= 10; i++) {
+			//console.log(last_blocks.length);  // + ' - size ' + e.size);
+			if (posi< WIDTH/2) posi += 0.002;
 			last_blocks.forEach(e => {
-		
 			if ( BSV_BLOCKS - e.block -i == 0) { 
-				if (posi< WIDTH/2) posi += 0.002;
+				
 				if (e.size > 100000000) {
 					ctx.drawImage(buildingLarge, WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.2,  buildingLarge.width/10, buildingLarge.height/10);
 					link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
@@ -980,16 +982,16 @@ function drawVehicles(arr){
 							WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingMid.width/4, buildingMid.height/4);					
 					last_with += buildingMid.width/4 + 4;
 				} else if (e.size > 100000) {
-					ctx.drawImage(buildingLong, WIDTH - 150 - posi -last_with, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
+					ctx.drawImage(buildingLong, WIDTH - 150 - posi -last_with + 10, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
 					link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
 							WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
 					last_with += buildingLong.width/2 + 14;
 				} else { 
-					ctx.drawImage(buildingSmall, WIDTH - 150- posi - last_with + buildingSmall.width*.6, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
+					ctx.drawImage(buildingSmall, WIDTH - 150- posi - last_with + buildingSmall.width*0.8 + 10, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
 					//ctx.drawImage(buildingSmall, WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
 					link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
 							WIDTH - 150 - posi - last_with  + buildingSmall.width*.6, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);						
-					last_with += buildingSmall.width; // buildingSmall.width = 70)
+					last_with += buildingSmall.width -10; // buildingSmall.width = 70)
 				}
 			}
 			});	
