@@ -4,8 +4,6 @@
 */
 
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);body,html{height:100%;width:100%;margin:0;padding:0;left:0;top:0;font-size:100%}.center,.container{margin-left:auto;margin-right:auto}*{font-family:Lato,'Lato', Helvetica, sans-serif;line-height:1.5}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.375rem}h4{font-size:1.125rem}h5{font-size:1rem}h6{font-size:.575rem}p{font-size:1.125rem;font-weight:200;line-height:1.8}.font-light{font-weight:300}.font-regular{font-weight:400}.font-heavy{font-weight:700}.left{text-align:left}.right{text-align:right}.center{text-align:center}.justify{text-align:justify}.container{width:90%}.row{position:relative;width:100%}.row [class^=col]{float:left;margin:.5rem 2%;min-height:.125rem}.col-1,.col-10,.col-11,.col-12,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9{width:96%}.col-1-sm{width:4.33%}.col-2-sm{width:12.66%}.col-3-sm{width:21%}.col-4-sm{width:29.33%}.col-5-sm{width:37.66%}.col-6-sm{width:46%}.col-7-sm{width:54.33%}.col-8-sm{width:62.66%}.col-9-sm{width:71%}.col-10-sm{width:79.33%}.col-11-sm{width:87.66%}.col-12-sm{width:96%}.row::after{content:"";display:table;clear:both}.hidden-sm{display:none}@media only screen and (min-width:33.75em){.container{width:80%}}@media only screen and (min-width:45em){.col-1{width:4.33%}.col-2{width:12.66%}.col-3{width:21%}.col-4{width:29.33%}.col-5{width:37.66%}.col-6{width:46%}.col-7{width:54.33%}.col-8{width:62.66%}.col-9{width:71%}.col-10{width:79.33%}.col-11{width:87.66%}.col-12{width:96%}.hidden-sm{display:block}}@media only screen and (min-width:60em){.container{width:75%;max-width:60rem}}
-
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -45,9 +43,23 @@ span {
   z-index: -500;
   display: block;
   margin: 0 auto;
- /* touch-action: none;*/
+ /* touch-action: none - sound;*/
 }
 #topCanvas { z-index: 2; }
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {bottom:-300px; opacity:0} 
+  to {bottom:0; opacity:1}
+}
+@keyframes animatetop {
+  from {bottom:-300px; opacity:0}
+  to {bottom:0; opacity:1}
+}
+@keyframes animateleft {
+  from{left:-300px; opacity:0}
+  to {left: 55px; opacity: 1}
+}
 
 body {
   line-height: 1;
@@ -63,17 +75,12 @@ q:before, q:after {
   content: '';
   content: none;
 }
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
 
 html, body {
   overflow: hidden;
-  width: 100%;
+  width:  100%;
   height: 100%;
-  margin: 0;
+  margin:  0;
   padding: 0;
 }
 * { margin: 0; padding: 0px; }
@@ -82,13 +89,16 @@ html, body {
   max-width:100%;
   height:auto;
 }
-
 body {
   background: rgb(0, 0, 0);
 }
 
 h1,h2,h3,h4,h5,h6 {
   font-family:'Lato', sans-serif;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 
@@ -150,7 +160,6 @@ h1,h2,h3,h4,h5,h6 {
   vertical-align:top;
   margin:7px 0px 20px 10px;
 }
-
 .nav a:hover i, .nav a:focus i {
   color:rgb(64, 0, 0);
 }
@@ -160,7 +169,6 @@ h1,h2,h3,h4,h5,h6 {
   padding:0px;
   text-shadow:1px 1px 5px rgba(0,0,0,0.8);
 }
-
 .core-nav {
   left:0;
   top:405px;
@@ -178,7 +186,6 @@ h1,h2,h3,h4,h5,h6 {
 @-moz-document url-prefix() { 
   .core-nav {top:425px;}
 }
-
 .core-nav a:hover i, .core-nav a:focus i {
   color:#1D83A1;
 }
@@ -214,8 +221,7 @@ color:#444;
   box-shadow:none;
 }
 
-/*shoutout to the modal switcher here: https://jsfiddle.net/jnwrc5ay/245/*/
-
+/*modal switcher here: https://jsfiddle.net/jnwrc5ay/245/*/
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -229,8 +235,6 @@ color:#444;
  /* white-space: nowrap;*/
   transition: top 0.3s; /* Transition effect when sliding down (and up) */
     z-index:9999;
-    /*background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); */
 }
 
 .modal-content a:hover {
@@ -256,21 +260,6 @@ top:10%;
     left:10%;
 	float: left;
 	overflow-y:scroll;
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-    from {bottom:-300px; opacity:0} 
-    to {bottom:0; opacity:1}
-}
-@keyframes animatetop {
-    from {bottom:-300px; opacity:0}
-    to {bottom:0; opacity:1}
-}
-
-@keyframes animateleft {
-  from{left:-300px; opacity:0}
-  to {left: 55px; opacity: 1}
 }
 
 
@@ -359,18 +348,14 @@ table tr td h6 span {
 #modal-info input {
 margin:15px 0;display:block;
 }
-
 #modal-info span {
   display:inline-block;
   color:rgb(255, 128, 0);
   font-weight:700;
 }
-
 #modal-info ul li {
   font-size:12px;
 }
-
-
 #modal-donate .modal-body p.label, #modal-info .modal-body p.label {
   background:#eee;
   border-radius:3px;
@@ -379,11 +364,9 @@ margin:15px 0;display:block;
   float:left;
   text-align:center;
 }
-
 #modal-info .modal-body p {
   margin:1rem 0;
 }
-
 .modal-body h6 {
   font-size:.875rem
 }
@@ -393,8 +376,7 @@ margin:15px 0;display:block;
   list-style:circle;
   margin-left:20px;
  }
-
-  #modal-info .modal-body ul li {
+#modal-info .modal-body ul li {
     padding:5px 0;
   }
 #modal-donate .modal-body p {
@@ -412,11 +394,17 @@ margin:15px 0;display:block;
   text-transform: uppercase;
   z-index: -1;
 }
-.lane-size.park { /* not used */
-  top: 8%;
+.lane-park {
+  top: 10%;
+right:2%;
+
+  color: rgb(222, 222, 222);
+  font-size: 32px;
+  text-transform: uppercase;
+  z-index: -1;
 }
 .lane-size.one {
-  top: 15%;
+  top: 16%;
 }
 .lane-size.two {
   top: 22%;
@@ -502,13 +490,11 @@ margin:15px 0;display:block;
     bottom: 0;
     z-index: 10;
 }
-
-.fees-bch {
+.fees-bsv {
     top: 11.5%;
     height: 52.36%;
     width:36px;
     right: 5%;
-    
 }
 
 .fees-toll.fees-btc{
@@ -546,7 +532,7 @@ background:#2e2e2e;
     text-align:center;
 }
 
-#fees-bch, #fees-btc {
+#fees-bsv, #fees-btc {
   /*border-top: 1px solid #fff;*/
     position: relative;
     left: -19.5px;
@@ -554,7 +540,7 @@ background:#2e2e2e;
     width: 54px;
 }
 
-.fees-bch,.fees-btc {
+.fees-bsv,.fees-btc {
       right:5%;
     }
     .fees-toll, .fees-toll.fees-btc, .fees-btc {
@@ -577,7 +563,7 @@ background:#2e2e2e;
       left:0;
       top:48%;
     }
-    .fees-bch #fees-bch {
+    .fees-bsv #fees-bsv {
       background:#F8D448;
       color:#444;
       left: -26px;
@@ -697,14 +683,14 @@ img.logo-label {
   z-index:-2;
 }
 
-.road-bg-bs {
-  background: rgb(40, 40, 40);;
+.park-bg {
+  background: rgb(56, 56, 56);;
   position:absolute;
-  height:13.34%;
-  width:100%;
-  bottom:13.34%;
-  left:0;
-  z-index:-2;
+  top:3.34%;
+  height:15.34%;
+  width:10%;
+  left:48%;
+  z-index:-1;
 }
 
 .bitCoin {
@@ -718,6 +704,7 @@ img.logo-label {
   z-index: -1;
 }
 
+/* dark background */
 .bitCoin:before {
   content: "";
   width: 100%;
@@ -742,10 +729,6 @@ img.logo-label {
   background-repeat: repeat-x;
   background-image: linear-gradient(to right, #c2c2c2 60%, rgba(255, 255, 255, 0) 60%);
   z-index:-2;
-}
-
-.lane.park {
-  top:12.67%;
 }
 
 .lane.one {
@@ -1599,7 +1582,7 @@ input[type=range]:focus::-ms-fill-upper {
     left:5px;
     top:10px;
   }
-  .fees-bch,.fees-btc {
+  .fees-bsv,.fees-btc {
     right:10.2%;
   }
 
@@ -1607,7 +1590,7 @@ input[type=range]:focus::-ms-fill-upper {
     .nav {
       top:10%;
     }
-    .fees-bch{
+    .fees-bsv{
       height: 49.36%;
     }
     .ad-four{
@@ -1616,7 +1599,7 @@ input[type=range]:focus::-ms-fill-upper {
   }
  
 @media only screen and (orientation: portrait){
-    .fees-bch,.fees-btc {
+    .fees-bsv,.fees-btc {
       right:12.5%;
     }
     .fees-toll, .fees-toll.fees-btc, .fees-btc {
@@ -1640,7 +1623,7 @@ input[type=range]:focus::-ms-fill-upper {
       left:0;
       top:48%;
     }
-    .fees-bch #fees-bch {
+    .fees-bsv #fees-bsv {
       background:#F8D448;
       color:#444;
       left: -26px;

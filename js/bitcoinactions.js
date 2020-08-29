@@ -18,6 +18,7 @@ const socketBitCoin = ''
 const 
     top_canvas = document.getElementById("topCanvas"),
 	top_ctx = top_canvas.getContext("2d"),
+	bountyCount = document.getElementById("bounty-count"),
 	bitCoinPoolInfo = document.getElementById("bitCoin-pool"),
 	bitCoinBlock = document.getElementById("bitCoin-block"),
 	cashSize = document.getElementById("bitCoin-size"),	
@@ -62,6 +63,7 @@ let WIDTH = null,
 	HEIGHT = null,
 	SINGLE_LANE = HEIGHT/15, // 15
 	SPEED = 8,
+	SOUND_ON = false,
 	SPEED_MODIFIER = 0.5,
 	PRICE_BITCOIN = 300;
 
@@ -72,7 +74,10 @@ let TX_MICRO = 		0.01,
 	TX_MEDIUM = 	100000,
 	TX_LARGE =  	500000,
 	TX_WHALE = 		10000000,
-	BOUNTY_LANE    = Math.floor(Math.random() * 10) + 3,
+	BOUNTY_LANE    	=  Math.floor(Math.random() * 10) + 4,
+	BOUNTY_COUNT 	= 0,
+	BOUNTY_X	 	= 0,
+	BOUNTY_Y		= 0,
 	BOUNTY_VISIBLE = false;
 
 // animation
@@ -167,8 +172,7 @@ bitsocket.on("message", function(m) {
 		}
 		if (data[l].out[0].e.v > 0) {
 			addr =  data[l].out[0].e.a;
-		}
-		else {
+		}else if (addr =  data[l].out[1].e){
 			addr =  data[l].out[1].e.a;
 		}
 		seqNr = seqNr + 1;
@@ -248,6 +252,7 @@ function init(){
 	canvas.height = window.innerHeight;
 	top_canvas.width = window.innerWidth; 
 	top_canvas.height = window.innerHeight;
+	canvas.addEventListener("click", click_canvas, false);
 	
 	// listenners
 	window.addEventListener("load", resize, false);
@@ -312,15 +317,61 @@ function init(){
 	updateMempoolData();
 	setTimeout(() => {
 		updatePriceData();	
-	}, 3000);
+	}, 8000);
 	
 	// remove loading screen
 	onReady(function () {
 		show('page', true);
 		show('loading', false);
+		init_sounds();
 	});
 
 }
+
+var audioElement = null;
+var mp3Source =  '<source src="' + './media/cha-ching' + '.mp3" type="audio/mp3">';
+
+function init_sounds() {
+	//var mp3Source = '<source src="' + '/media/horns' + '.mp3" type="audio/mp3">';
+	
+
+	// Add audio node to html
+	var elementId = 'audioElement' + new Date().valueOf().toString();
+	audioElement = document.createElement('audio');
+	audioElement.setAttribute('id', elementId);
+	// audioElement.setAttribute('autoplay', 'elementId')
+	audioElement.innerHTML = mp3Source;
+	document.body.appendChild(audioElement);
+
+ //  if (//newBlockMined && 
+	//getCookie('user-setting-blockSound') !== 'off') {
+     // playSound();
+  // }
+}
+
+function getCookie (name) {
+  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
+ 	console.log('cookie: ', v);
+  return v ? v[2] : null
+}
+
+async function playSound () {
+	if (!SOUND_ON) return;
+  try {
+    var play = audioElement.play();
+
+    if (play !== undefined) {
+      play.then(_ => {
+        //  started
+      }).catch(error => {
+        console.log('Error to play sound:', error);
+      })
+    }
+  } catch (err) {
+	console.log('Error play sound:', err)
+  }
+}
+
 
 function show(id, value) {
     document.getElementById(id).style.display = value ? 'block' : 'none';
@@ -504,8 +555,7 @@ function blockNotify(data, isBitCoin){
 										console.log('*** New BSV block: ' + BSV_BLOCKS);
 										bitCoinBlock.textContent = '' + BSV_BLOCKS;
 										fetch_block_data(BSV_BLOCKS);
-										posi = 0;
-									
+										blocks_posi = 0;
 									//	document.getElementById("spot4").src = carTwetch.src;
 									}
 								}
@@ -550,7 +600,7 @@ function fetch_block_data (height) {
 						size: res.size,
 						txcount: res.txcount
 					};
-					
+					//playSound();
 					last_blocks.push(item);
 					SPEED = 8;
 				//	let t = parseInt(bitCoinPoolInfo.textContent.replace(/\,/g,''));	  
@@ -642,7 +692,7 @@ function newTX(isBitCoin, txInfo){
 		if (tx_already_Exsists) return;
 		let t = parseInt(bitCoinPoolInfo.textContent.replace(/\,/g,''));			
 		bitCoinPoolInfo.textContent = formatWithCommas(t +1);
-		let randLane = Math.floor(Math.random() * 10) + 4;
+		let randLane =  Math.floor(Math.random() * 10) + 4;
 		createVehicle(isBitCoin, txInfo, randLane, true);
 	} 
 }
@@ -726,12 +776,12 @@ function createVehicle(type, txInfo, lane, isBitCoin){
 	if (memorySize > 20000) {
 		height = SINGLE_LANE * 1.8;
 		width = width*1.7;	
-	//	lane = lane -  SINGLE_LANE *.3;
+	 	lane = lane - 0.25;
 	} else if (memorySize > 5000) {
 		height = SINGLE_LANE * 1.4;
 		width = width*1.1;	
+		lane = lane - 0.12;
 	}
-	
 	let item = {
 		//type:type,
 		id: txInfo.hash,
@@ -761,14 +811,20 @@ function getCar(valueOut, donation, isBitCoin, userTx, sdTx, txinfo){
 	//console.log("look "+  txinfo.feature);
 	if (txinfo.feature && txinfo.feature.indexOf('satoplay') >= 0 ) {  
 	//	console.log("found "+  txinfo.feature);
+		BOUNTY_VISIBLE = true;
+		 BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
 		return carSatoPlay;
 	}
 	if (txinfo.feature && txinfo.feature.indexOf('peergame') >= 0 ) {  
 	//	console.log("found "+  txinfo.feature);
+		BOUNTY_VISIBLE = true;
+		 BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
 		return carPeerGame;
 	}	
 	if (txinfo.feature && txinfo.feature.indexOf('wetch') >= 0 ) {  // &  feature.indexOf('peergame') !== -1 ) {  // like peergame toLowerCase().
 		console.log("found "+  txinfo.feature);
+		BOUNTY_VISIBLE = true;
+		 BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
 		return carTwetch;  // cloud
 	}	
 	
@@ -939,9 +995,31 @@ function link_Text(ctx, linkURL, linkX, linkY, linkWidth, linkHeight) {
 	drawHyperLink();
 }
 
+
+function click_canvas(e) {
+	SOUND_ON = !SOUND_ON;
+//	 var isLink = false;
+//            var x, y;
+//        if (e.layerX || e.layerX == 0) { // for firefox
+//            x = e.layerX;
+//            y = e.layerY;
+//        }
+//        x -= canvas.offsetLeft;
+//        y -= canvas.offsetTop;
+//        if (x >= linkX && x <= (linkX + linkWidth) 
+//                && y  - linkHeight <= linkY && y >= linkY) {
+//            document.body.style.cursor = "pointer";
+//            isLink = true;
+//        }
+//        if (isLink) {
+//            window.location = linkURL;
+//        }
+}
+
+
 var last_dist_x = 0;
 
-let posi = 0;
+let blocks_posi = 0;
 // loop through transactions and draw them
 function drawVehicles(arr){
 	let car = null;
@@ -949,54 +1027,55 @@ function drawVehicles(arr){
 	let width = 0;
 	let isBitCoin = true;
 	let count = 0;
-	if (SPEED < 12) SPEED += posi/100000;
+	if (SPEED < 12) SPEED += blocks_posi/100000;
 	if (BOUNTY_VISIBLE) {
-		wrapText(ctx, "Collect with your special car >>", WIDTH - 120, BOUNTY_LANE*SINGLE_LANE+ SINGLE_LANE*.5, 80, 11);
-		ctx.drawImage(bounty, WIDTH - 50, BOUNTY_LANE*SINGLE_LANE+ SINGLE_LANE*.2, SINGLE_LANE*0.6 , SINGLE_LANE*0.6);
-		
-		//console.log(' - *****  ' + last_blocks.length);
-		let last_with = 0;
-		for (let i = 0; i<= 10; i++) {
-			//console.log(last_blocks.length);  // + ' - size ' + e.size);
-			if (posi< WIDTH/2) posi += 0.002;
-			last_blocks.forEach(e => {
-			if ( BSV_BLOCKS - e.block -i == 0) { 
-				
-				if (e.size > 100000000) {
-					ctx.drawImage(buildingLarge, WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.2,  buildingLarge.width/10, buildingLarge.height/10);
-					//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
-					//		WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingLarge.width/10, buildingLarge.height/10);	
-					last_with += buildingLarge.width/10 + 4;
-				//	console.log(e.block + ' - size ' + e.size);
-				} else if (e.size > 10000000) {
-					ctx.drawImage(buildingSquare, WIDTH - 150- posi -last_with , HEIGHT - SINGLE_LANE*2.1, buildingSquare.width/8, buildingSquare.height/8);
-					//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
-					//		WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingSquare.width/8, buildingSquare.height/8);
-					last_with += buildingSquare.width/8 + 4;
-			//		console.log(e.block + ' - size ' + e.size);
-				//ctx.drawImage(building, WIDTH - 650, HEIGHT - SINGLE_LANE*2, buildingLarge.width/8, SINGLE_LANE*1.7);
-				//ctx.drawImage(buildingLarge, WIDTH - 150, HEIGHT - SINGLE_LANE*2, buildingLarge.width/8, SINGLE_LANE*1.7);
-				} else if (e.size > 1000000) { 
-					ctx.drawImage(buildingMid, WIDTH - 150- posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingMid.width/4, buildingMid.height/4);
-					//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
-					//		WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingMid.width/4, buildingMid.height/4);					
-					last_with += buildingMid.width/4 + 4;
-				} else if (e.size > 100000) {
-					ctx.drawImage(buildingLong, WIDTH - 150 - posi -last_with + 6, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
-					//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
-					//		WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
-					last_with += buildingLong.width/2 ;
-				} else { 
-					ctx.drawImage(buildingSmall, WIDTH - 150- posi - last_with + buildingSmall.width + 5, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
-					//ctx.drawImage(buildingSmall, WIDTH - 150 - posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
-					//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
-					//		WIDTH - 150 - posi - last_with  + buildingSmall.width*.6, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);						
-					last_with += buildingSmall.width/2 - 8; // buildingSmall.width = 70)
-				}
-			}
-			});	
-		}
+		wrapText(ctx, "Collect with your special car >>", WIDTH - 120, BOUNTY_LANE*SINGLE_LANE - SINGLE_LANE*.5, 80, 11);
+		BOUNTY_X = WIDTH - 50;
+		BOUNTY_Y =  BOUNTY_LANE*SINGLE_LANE + SINGLE_LANE*.2 -SINGLE_LANE;
+		ctx.drawImage(bounty, BOUNTY_X, BOUNTY_Y, SINGLE_LANE*0.6 , SINGLE_LANE*0.6);
 	}
+	//console.log(' - *****  ' + last_blocks.length);
+	let last_with = 0;
+	for (let i = 0; i<= 10; i++) {
+		if (blocks_posi< WIDTH/2) blocks_posi += 0.1/(1+blocks_posi);
+		last_blocks.forEach(e => {
+		if ( BSV_BLOCKS - e.block -i == 0) { 
+			
+			if (e.size > 100000000) {
+				ctx.drawImage(buildingLarge, WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.2,  buildingLarge.width/10, buildingLarge.height/10);
+				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
+				//		WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingLarge.width/10, buildingLarge.height/10);	
+				last_with += buildingLarge.width/10 + 4;
+			//	console.log(e.block + ' - size ' + e.size);
+			} else if (e.size > 10000000) {
+				ctx.drawImage(buildingSquare, WIDTH - 150- blocks_posi -last_with , HEIGHT - SINGLE_LANE*2.1, buildingSquare.width/8, buildingSquare.height/8);
+				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
+				//		WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingSquare.width/8, buildingSquare.height/8);
+				last_with += buildingSquare.width/8 + 4;
+		//		console.log(e.block + ' - size ' + e.size);
+			//ctx.drawImage(building, WIDTH - 650, HEIGHT - SINGLE_LANE*2, buildingLarge.width/8, SINGLE_LANE*1.7);
+			//ctx.drawImage(buildingLarge, WIDTH - 150, HEIGHT - SINGLE_LANE*2, buildingLarge.width/8, SINGLE_LANE*1.7);
+			} else if (e.size > 1000000) { 
+				ctx.drawImage(buildingMid, WIDTH - 150- blocks_posi - last_with - 6, HEIGHT - SINGLE_LANE*2.1, buildingMid.width/4, buildingMid.height/4);
+				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
+				//		WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingMid.width/4, buildingMid.height/4);					
+				last_with += buildingMid.width/4;
+			} else if (e.size > 100000) {
+				ctx.drawImage(buildingLong, WIDTH - 150 - blocks_posi -last_with + 6, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
+				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
+				//		WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingLong.width/2, buildingLong.height/2);
+				last_with += buildingLong.width/2 ;
+			} else { 
+				ctx.drawImage(buildingSmall, WIDTH - 150- blocks_posi - last_with + buildingSmall.width + 5, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
+				//ctx.drawImage(buildingSmall, WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);
+				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
+				//		WIDTH - 150 - blocks_posi - last_with  + buildingSmall.width*.6, HEIGHT - SINGLE_LANE*2.1, buildingSmall.width/2, buildingSmall.height/2);						
+				last_with += buildingSmall.width/2 - 8; // buildingSmall.width = 70)
+			}
+		}
+		});	
+	}
+	
 	arr.slice().reverse().forEach(function(item, index, object){
 		if (item.x > WIDTH + 200 || item.lane < 1) return; 
 		if(!item.isBitCoin && konamiActive) { 
@@ -1017,8 +1096,7 @@ function drawVehicles(arr){
 
 			if (item.isBitCoin){
 				if (  item.donation || car == carTwetch || car == carPeerGame || car == carSatoPlay ) {
-					BOUNTY_VISIBLE = true;
-					if (count % 10 == 1) BOUNTY_LANE = Math.floor(Math.random() * 10) + 3;
+					if (count % 1000 == 1)  BOUNTY_VISIBLE = true; //BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
 					y = (1.6 * SINGLE_LANE) ; //- SINGLE_LANE;
 					//item.x += SPEED / 2; 
 					if (item.x >= WIDTH / 2 &&  item.x < WIDTH) { // stop for some blocks
@@ -1079,8 +1157,15 @@ function drawVehicles(arr){
             	}
 				// .setAttribute('href',item.t_ref);
 				//console.log('Cloud: ' + item.x);
-			} else ctx.drawImage(car, item.x, y, width, item.h*0.95);
-			
+			} else {
+				if (BOUNTY_VISIBLE && car != carMicroBitCoin && item.x > BOUNTY_X  && item.x - width*0.3 < BOUNTY_X && y <  BOUNTY_Y && y + item.h*.3 > BOUNTY_Y)  {
+					BOUNTY_COUNT++;
+					bountyCount.textContent = '' + BOUNTY_COUNT;
+					BOUNTY_VISIBLE = false;
+					playSound();
+				}
+				ctx.drawImage(car, item.x, y, width, item.h*0.95);
+			}
 		} 
 		// move sprites
 		if(car == carTwetch || car == cloud) {

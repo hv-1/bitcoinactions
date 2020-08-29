@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="IE=11" http-equiv="X-UA-Compatible">
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <title>Bitcoin Actions Live Autobahn (beta)</title>
+  <title>Bitcoin Actions Live Autobahn</title>
   <meta content="Follow Bitcoin (BSV) actions visualizer." name="description">
   <meta name="description" content="Follow Bitcoin Satoshi Vision (BSV) action live visualizer.">
 
@@ -62,7 +62,7 @@
 
     <canvas id="renderCanvas"></canvas>
 
-<span class="lane-size park">Parking</span>
+	<span class="lane-park">Waiting for Ad-Upload</span>
     <span class="lane-size one">FEATURE</span>
     <span class="lane-size two"></span>
     <span class="lane-size three"></span>
@@ -77,8 +77,8 @@
     <div class="bitCoin"></div>
 
     <div class="road-bg"></div>
+ 	<div class="park-bg"></div>
 
- <div class="lane park"></div>
     <div class="lane one"></div>
     <div class="lane two"></div>
     <div class="lane three"></div>
@@ -93,7 +93,7 @@
     <div class="title">
       <span class="live mobile-only mobile-live">BSV Near Time Actions</span>
        <!-- img alt="Tx Autobahn Logo BCH BTC Visualizer" id="logo" src="assets/tx-Autobahn-logo.png" -->
-      <h2>Bitcoin BSV Action Autobahn (beta)</h2>
+      <h2>Bitcoin BSV Action Autobahn (Beta - Bounties)</h2>
 
     </div>
 
@@ -101,13 +101,12 @@
     <div class="road-sign sign bitCoin-road-sign">
       <div class="sign-border">
         <h4 class="sign-title">Enterprise World
-          <br />Unlimted Capacity</h4>
+          <br />- Unlimted Capacity -</h4>
         <h5 class="highway-num">BSV</h5>
         <div class="bitCoin-pool">
           <span id="bitCoin-pool">UPDATING</span>TX in Transit
-          <h6>Estimated Action Fees
-            <span id="fees-cash">
-              0.0001 $</span>
+         	<h6>Estimated Action Fees
+            <span id="fees-bsv">   0.0001 $</span>
           </h6>
 
           <span id="bitCoin-block">UPDATING</span>Last Block Nr
@@ -116,15 +115,21 @@
           </h6>
 
           <span id="price_bitcoin">lookin for</span>Price Bitcoin BSV
-        </div>
+         <h6>Bounties collected
+            <span id="bounty-count"> 0</span>
+          </h6>
+		</div>
       </div>
     </div>
+
+
 
     <div class="whitepaper">
       <a href="https://bitcoinsv.io/bitcoin.pdf" target="_blank" title="Whitepaper">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
       </a>
     </div>
+
  
     <div class="adspot ad-six ad-logo">
       <a href="mailto:hv@moneybutton.com?subject=Purchase Ad Spot" title="Timed Ad" target="_blank">
