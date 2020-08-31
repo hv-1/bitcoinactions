@@ -221,7 +221,7 @@ color:#444;
   box-shadow:none;
 }
 
-/*modal switcher here: https://jsfiddle.net/jnwrc5ay/245/*/
+/*modal switcher: https://jsfiddle.net/jnwrc5ay/245/*/
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -289,7 +289,6 @@ top:10%;
   color:#fff;
 /*  text-decoration:none;
 */}
-
 .modal-footer a:hover {
   text-decoration: underline;
 }
@@ -539,7 +538,6 @@ background:#2e2e2e;
     top: 50%;
     width: 54px;
 }
-
 .fees-bsv,.fees-btc {
       right:5%;
     }
@@ -574,18 +572,15 @@ background:#2e2e2e;
       border-radius: 0 0 5px 5px;
       padding: 2px 0;
     }
-
     .fees-toll.fees-btc, .fees-btc {
       right:5%;
     }
-
     .fees-toll.fees-btc #fees-btc {
       top:43%;
     }
     .fees-toll.fees-btc .avg {
       top:41.5%;
     }
-
     .fee-title.secondary {display:none;}
     
     .fee-title {
@@ -686,10 +681,10 @@ img.logo-label {
 .park-bg {
   background: rgb(56, 56, 56);;
   position:absolute;
-  top:3.34%;
-  height:15.34%;
-  width:10%;
-  left:48%;
+  top:4.84%;
+  height:12.64%;
+  width:12.5%;
+  left:47%;
   z-index:-1;
 }
 
@@ -730,7 +725,6 @@ img.logo-label {
   background-image: linear-gradient(to right, #c2c2c2 60%, rgba(255, 255, 255, 0) 60%);
   z-index:-2;
 }
-
 .lane.one {
   top:19.67%;
 }
@@ -762,12 +756,10 @@ img.logo-label {
   top:79.87%;
 }
 
-
 .road-sign.bitCoin-road-sign  {
   bottom:auto;
   top: 2%;
 }
-
 .core-road-sign.road-sign {
   bottom:2%;
 }
@@ -865,7 +857,6 @@ img.logo-label {
   left:50%;
   margin-left:-1px;
   z-index:3;
-
 }
 .adspot a {
   display:block;
@@ -1449,7 +1440,6 @@ input[type=range]:focus::-ms-fill-upper {
   .nav {
     top: 5%;
   }
-  
   .nav a i {
     line-height:1;
   }
@@ -1497,7 +1487,7 @@ input[type=range]:focus::-ms-fill-upper {
       width: 100%;
     }
 
-    .fees-btc {
+    .fees-bsv {
       bottom:2%;
       height: 20.01%;
     }
@@ -1533,7 +1523,6 @@ input[type=range]:focus::-ms-fill-upper {
   table tr td .qmark {
     font-size:2rem;
   }
-  
   .modal-content {
     width:96%;
     left: 2%;
@@ -1543,7 +1532,6 @@ input[type=range]:focus::-ms-fill-upper {
     height: 90%;
     overflow: auto;
   } 
-
    .modal-content{
     height: 90%;
     overflow: auto;
