@@ -1,17 +1,21 @@
+
+// Beta Vesion - Humanis Veris
+//const bitcoinfiles = bitcoinfiles;  //require('bitcoinfiles-sdk');
+
 "use strict";
 
 // used external res
+// sockets
+// https://bitsocket.org/ for bsv   https://github.com/interplanaria/bitsocket/blob/master/socket.js
+const socketBitCoin = '';
+
+
 const 
 	urlBlockchainInfo = "https://api.blockchain.info/",
 	urlCoinMarketCap = "https://api.coingecko.com/api/v3/simple/price?ids=", 
 	urlWhatsonchain_pool = "https://api.whatsonchain.com/v1/bsv/main/mempool/info",  // {"size":22972,"bytes":7593787,"usage":30769136,"maxmempool":64000000000,"mempoolminfee":0}
     urlWhatsonchain_info = "https://api.whatsonchain.com/v1/bsv/main/chain/info",
 	urlBlockChair = "https://api.blockchair.com/bitcoin-sv/stats";   // https://github.com/Blockchair/Blockchair.Support/blob/master/API_DOCUMENTATION_EN.md#link_M03
-
-
-// sockets
-// https://bitsocket.org/ for bsv   https://github.com/interplanaria/bitsocket/blob/master/socket.js
-const socketBitCoin = ''
 
 
 // DOM elements
@@ -56,7 +60,6 @@ const loadingGif = new Image(),
 	buildingLarge = new Image(),
 	bounty = new Image();
 
-loadingGif.src = "assets/loading.gif";
 
 // constants
 let WIDTH = null,
@@ -93,9 +96,9 @@ let isVisible = true,
 // arrays for vehicles
 let txBitCoin = [],
 	txPosts = [],
-	last_blocks = [],
-	feesBitCoin = [];
+	last_blocks = [];
 
+var twetch_sdk = null;
 //var EventSource = require('..') ?? 
 
 // Write a bitquery - unwriter
@@ -169,11 +172,11 @@ bitsocket.on("message", function(m) {
 				ops_inf = data[l].out[k].tape[1].cell[0].s;
 				if ( data[l].out[k].tape[1].cell[0].s2) ops_inf = ops_inf + ' ' + data[l].out[k].tape[1].cell[0].s2;
 			}
-		}
-		if (data[l].out[0].e.v > 0) {
-			addr =  data[l].out[0].e.a;
-		}else if (addr =  data[l].out[1].e){
-			addr =  data[l].out[1].e.a;
+		
+			if (!addr && data[l].out[k].e) {
+				addr =  data[l].out[k].e.a;
+			}
+
 		}
 		seqNr = seqNr + 1;
 		//if (valueOut*10 >= 1 || ops_inf != '') {
@@ -243,10 +246,18 @@ function memorySizeOf(obj) {
     return sizeOf(obj);
 };
 
+
+async function load_bit_files () {
+	//var bitcoinfiles = new bitcoinfiles();
+	//b_file_result = await bitcoinfiles.getFile('408d3b99a06afd01e1717d78a7a9d2ee1c08f59003022429ae9b0a66075dfd40');
+	loadingGif.src =  "assets/loading.gif";	
+}
+	
 var carBitCoin_ref = 'https://whatsonchain.com/tx/';  // + item.id;
 
 // initialise everything
 function init(){
+	load_bit_files();
 	// setup canvas
 	canvas.width = window.innerWidth; 
 	canvas.height = window.innerHeight;
@@ -350,9 +361,9 @@ function init_sounds() {
 }
 
 function getCookie (name) {
-  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
+  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
  	console.log('cookie: ', v);
-  return v ? v[2] : null
+  return v ? v[2] : null;
 }
 
 async function playSound () {
@@ -482,12 +493,12 @@ function fetch_Twetch() {
 				"t_ref":	t_ref,
 				'icon':		ic,  //o.userByUserId.icon
 				"memorySize": 0  // find out
-			}
-			if (!add_) newTX(true, txData);
+			};
+			if (!add_)  newTX(true, txData); 
         }
-
-        var twetch = new twetchjs();
-		const response = await twetch.query(`            query {
+        //var twetch_sdk = new twetchjs();
+		if (!twetch_sdk) twetch_sdk = new twetchjs();
+		const response = await twetch_sdk.query(`            query {
                 allPosts( 	first: 18,
 							orderBy: CREATED_AT_DESC
 				) 
@@ -500,8 +511,13 @@ function fetch_Twetch() {
 		for (let i = 0; i < response.allPosts.edges.length; i++) {
             if (response.allPosts.edges[i] && response.allPosts.edges[i].node) addToList(response.allPosts.edges[i].node, true);
         }
+		let d = 0;
         for (let i = response.allPosts.edges.length -1; i>= 0; i--) { // send cars in correct order
-            if (response.allPosts.edges[i] && response.allPosts.edges[i].node) addToList(response.allPosts.edges[i].node, false);
+            if (response.allPosts.edges[i] && response.allPosts.edges[i].node) {
+				setTimeout(() => { addToList(response.allPosts.edges[i].node, false);
+				}, d*3000);
+				d +=1;
+			}
         }
 
 	})();
@@ -527,16 +543,18 @@ function blockNotify(data, isBitCoin){
 				setTimeout(() => {
 						let xhr = new XMLHttpRequest();
 						xhr.timeout = 4000;
-	 // {"chain":"main","blocks":648520,"headers":648520,"bestblockhash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","difficulty":298041066507.4231,"mediantime":1597647042,"verificationprogress":0.9999996458643543,"pruned":false,"chainwork":"00000000000000000000000000000000000000000116962bb79c272f051fdee5"}
-						xhr.onreadystatechange = function () {
+						xhr.addEventListener("loadend", transferComplete);
+						xhr.addEventListener("error", transferFailed);
+						
+						function transferComplete(evt) {
+						 // console.log("The WOC transfer is complete.");
 							if (xhr.readyState >= 2 && xhr.status == 200) {
-							console.log('xhr ..? ' + xhr.readyState);
-						    //console.log('xhr ..' + xhr.status);
-								if (xhr.readyState >= 2) {
+								if (xhr.readyState > 2) {  // it only works when first / also try with stat 2 ... why? - but causes EOF errors sometimes
 									xhr.responseText;
 									let res = JSON.parse(xhr.responseText);
 									 //res = JSON.parse(xhr.responseText);
-									//console.log('*** BSV pull block ' + res.blocks);
+								   //console.log('xhr ..? ' + xhr.readyState);
+									console.log('*** BSV pull block ' + res.blocks);
 									
 									if (BSV_BLOCKS <  res.blocks) {
 										new_data = true;
@@ -548,9 +566,17 @@ function blockNotify(data, isBitCoin){
 									//	document.getElementById("spot4").src = carTwetch.src;
 									}
 								}
-							} 
-							//console.log('abort ..');
+							}
 							xhr.abort(); 
+						}
+						function transferFailed(evt) {
+						  console.log("An error occurred while transferring from WOC.");
+						}
+
+	 // {"chain":"main","blocks":648520,"headers":648520,"bestblockhash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","difficulty":298041066507.4231,"mediantime":1597647042,"verificationprogress":0.9999996458643543,"pruned":false,"chainwork":"00000000000000000000000000000000000000000116962bb79c272f051fdee5"}
+						xhr.onreadystatechange = async function () {
+							//if (xhr.readyState >= 2) {  
+							// it only works when first / also try with stat 2 ... why? - but causes EOF errors sometimes
 						}
 						xhr.open('GET', urlWhatsonchain_info, true);
 						xhr.send();
@@ -560,7 +586,7 @@ function blockNotify(data, isBitCoin){
 					}, 8000);
 				}, 5000);
 			}
-		}, 1000);
+		}, 3000);
 	} 
 	setTimeout(() => {
 		updatePriceData();
@@ -571,9 +597,11 @@ function blockNotify(data, isBitCoin){
 // {"hash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","confirmations":5,"size":8147778,"height":648520,"version":541065216,"versionHex":"20400000","merkleroot":"3c71f4a1254f2adae193269238a22cb79e0a7a8cd6a2126c46ed5035dc49ceb6","txcount":39281,"tx":
 function fetch_block_data (height) {
 	let xhr = new XMLHttpRequest();
-	xhr.timeout = 4000;
-	 // {"chain":"main","blocks":648520,"headers":648520,"bestblockhash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","difficulty":298041066507.4231,"mediantime":1597647042,"verificationprogress":0.9999996458643543,"pruned":false,"chainwork":"00000000000000000000000000000000000000000116962bb79c272f051fdee5"}
-	xhr.onreadystatechange = function () {
+	xhr.addEventListener("loadend", transferComplete);
+	xhr.addEventListener("error", transferFailed);
+	
+	function transferComplete(evt) {
+	   // console.log("The WOC Block transfer is complete.");
 		if (xhr.readyState >= 3 && xhr.status == 200) {
 		//console.log('new block xhr ..' + xhr.readyState);
 	    //console.log('xhr ..' + xhr.status);
@@ -598,6 +626,15 @@ function fetch_block_data (height) {
 			}
 			xhr.abort(); 
 		}
+	}
+	
+	function transferFailed(evt) {
+	  console.log("An error occurred while transferring from Block WOC.");
+	}
+	
+	 // {"chain":"main","blocks":648520,"headers":648520,"bestblockhash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","difficulty":298041066507.4231,"mediantime":1597647042,"verificationprogress":0.9999996458643543,"pruned":false,"chainwork":"00000000000000000000000000000000000000000116962bb79c272f051fdee5"}
+	xhr.onreadystatechange = function () {
+  // not safe
 	}
 	xhr.open('GET', 'https://api.whatsonchain.com/v1/bsv/main/block/height/'+height, true);
 	xhr.send();
@@ -688,7 +725,6 @@ function newTX(isBitCoin, txInfo){
 
 // adds tx info to the side list
 function addTxToList(item, car){
-	
 	let listItem = document.createElement("LI");
 	let anchor = document.createElement("A");
 	let text = "txid: " + item.id.substring(0, 7) + "...\n";
@@ -712,8 +748,6 @@ function addTxToList(item, car){
 //	if (transactionList.childNodes.length > 50){
 //		transactionList.removeChild(transactionList.childNodes[transactionList.childNodes.length -1]);
 //	}
-
-	
 }
 
 // create vehicles and push to an array
@@ -766,12 +800,16 @@ function createVehicle(type, txInfo, lane, isBitCoin){
 	let x = -width;
 	// fix vehicle positioning to prevent pile ups.
 	if (arr.length > 0){
+		let d = 0;
 		arr.forEach((key) => {
 			if (width >= key.x && lane == key.lane){
-				x = key.x - width - 15;
+				x = key.x - width*1.5 - d;
+				d += width/10;
 			}
+			if (key == carTwetch) x =x - 2*width;
 		});
-	}	
+	}
+	
 	let item = {
 		//type:type,
 		id: txInfo.hash,
@@ -812,7 +850,7 @@ function getCar(valueOut, donation, isBitCoin, userTx, sdTx, txinfo){
 		return carPeerGame;
 	}	
 	if (txinfo.feature && txinfo.feature.indexOf('wetch') >= 0 ) {  // &  feature.indexOf('peergame') !== -1 ) {  // like peergame toLowerCase().
-		console.log("found "+  txinfo.feature);
+		//console.log("found "+  txinfo.feature);
 		BOUNTY_VISIBLE = true;
 		 BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
 		return carTwetch;  // cloud
@@ -1098,7 +1136,7 @@ function drawVehicles(arr){
 					//item.x += SPEED / 2; 
 					if (item.x >= WIDTH / 2 &&  item.x < WIDTH) { // stop for some blocks
 						if(car == carTwetch || car == cloud) {
-							item.x -= SPEED / 5; 
+							item.x -= SPEED / 4; 
 						} else item.x -= SPEED ;
 						y -= SINGLE_LANE *0.85;
 						let car_im =  car.src;
@@ -1114,13 +1152,13 @@ function drawVehicles(arr){
 					} else {
 						item.y -= 1;
 					}
-				} else if (item.lane == 3 ) {  // special slow down
+				} else if (item.lane == 4 || item.lane == 10 || item.lane == 13) {  // special slow down
 					item.x -= 2;
 					if (item.x >= WIDTH / 6) {
-						item.x -= 2;
+						item.x -= 0.8;
 					}
 					if (item.x >= WIDTH / 4) {
-						item.x -= 0.6;
+						item.x -= 0.4;
 					}					
 					if (item.x >= 4 * WIDTH / 5 ) {
 						item.x -= 0.2; // SPEED ; // - transactionShowList.childNodes.length/20;
@@ -1129,18 +1167,20 @@ function drawVehicles(arr){
 					}
 				}
 			}
-			if (car == carTwetch) {  //add cloud text
+			if (car == carTwetch) {  //add cloud & text
 				ctx.font = "10pt";  //" Verdana";
 				ctx.drawImage(car, item.x, y + SINGLE_LANE*0.8, width*0.35 , item.h*0.35);
-				let cy = y+item.x*1.7 +SINGLE_LANE*1.5;
+				let cy = y+item.x*1.7 + item.lane* SINGLE_LANE/10;
 				//let cyt = y+item.x;
-				if(cy > SINGLE_LANE*12) {
-					cy = SINGLE_LANE*12;
+				if(cy >= SINGLE_LANE*12 ) {
+					cy = SINGLE_LANE*12;  // - item.lane* SINGLE_LANE/10;
 				
-					if(item.x > WIDTH/3 -30){ 
-						cy -= item.x*0.45 -  SINGLE_LANE*3;
+					if(item.x >= WIDTH/3 -30 ){ 
+						cy = item.lane* SINGLE_LANE*0.8;  // + item.lane* SINGLE_LANE/10;
+						item.x += SPEED / 4;
 					}
 				}
+				
 				ctx.drawImage(cloud, item.x, cy, width, item.h*1.9);
 				wrapText(ctx, item.valueOut, item.x + width*0.2, cy + SINGLE_LANE/2, width*0.7, 11);
 				//link_Text(ctx, item.t_ref, item.x + width*0.2, cy + SINGLE_LANE/2, width*0.7, 11);
