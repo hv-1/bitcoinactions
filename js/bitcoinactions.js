@@ -479,7 +479,7 @@ function fetch_Twetch() {
 //			}
 			
 			let ic = new Image();
-			ic.src = o.userByUserId.icon;
+			if (o.userByUserId.icon) ic.src = o.userByUserId.icon;
 			
 			let outs_ = [];
 			outs_.push({"addr": o.userId, "value": o.bContent});
@@ -617,6 +617,7 @@ function fetch_block_data (height) {
 						size: res.size,
 						txcount: res.txcount
 					};
+					cashSize.textContent = '' + res.size;
 					//playSound();
 					last_blocks.push(item);
 					SPEED = 8;
@@ -1136,7 +1137,7 @@ function drawVehicles(arr){
 					//item.x += SPEED / 2; 
 					if (item.x >= WIDTH / 2 &&  item.x < WIDTH) { // stop for some blocks
 						if(car == carTwetch || car == cloud) {
-							item.x -= SPEED / 4; 
+							item.x -= SPEED / 5; 
 						} else item.x -= SPEED ;
 						y -= SINGLE_LANE *0.85;
 						let car_im =  car.src;
@@ -1172,28 +1173,22 @@ function drawVehicles(arr){
 				ctx.drawImage(car, item.x, y + SINGLE_LANE*0.8, width*0.35 , item.h*0.35);
 				let cy = y+item.x*1.7 + item.lane* SINGLE_LANE/10;
 				//let cyt = y+item.x;
-				if(cy >= SINGLE_LANE*12 ) {
-					cy = SINGLE_LANE*12;  // - item.lane* SINGLE_LANE/10;
-				
-					if(item.x >= WIDTH/3 -30 ){ 
-						cy = item.lane* SINGLE_LANE*0.8;  // + item.lane* SINGLE_LANE/10;
-						item.x += SPEED / 4;
+				if(cy >= SINGLE_LANE*12 || item.x >= WIDTH/3  ) {
+					cy = SINGLE_LANE*12 ;  // for the bounce ...
+					if(item.x >= WIDTH/3 ){ 
+						cy = (SINGLE_LANE+10.5)*12 - 1.52*item.lane*SINGLE_LANE - item.lane/( WIDTH/3 - item.x -SINGLE_LANE)*item.x*SINGLE_LANE/4;  // what hack ...
+						//if (item.x < WIDTH / 2  - SPEED) item.x += SPEED / SINGLE_LANE;
 					}
 				}
-				
 				ctx.drawImage(cloud, item.x, cy, width, item.h*1.9);
 				wrapText(ctx, item.valueOut, item.x + width*0.2, cy + SINGLE_LANE/2, width*0.7, 11);
 				//link_Text(ctx, item.t_ref, item.x + width*0.2, cy + SINGLE_LANE/2, width*0.7, 11);
-				
-				//imgError(item.icon);
-				// test ? top_ctx.drawImage(item.icon,0,0,0,0);
 				try {
 				if (item.icon) ctx.drawImage(item.icon, item.x, cy + SINGLE_LANE*1.3, width/5, item.h*0.5);
 				} catch (e) {
                 	if (e && e != 'undefinded' && (e+'').substring(0,17) != 'InvalidStateError') console.log('Catch error: ' + (e+'').substring(0,16));
             	}
 				// .setAttribute('href',item.t_ref);
-				//console.log('Cloud: ' + item.x);
 			} else {
 				if (BOUNTY_VISIBLE && car != carMicroBitCoin && item.x > BOUNTY_X  && item.x - width*0.3 < BOUNTY_X && y <  BOUNTY_Y && y + item.h*.3 > BOUNTY_Y)  {
 					BOUNTY_COUNT++;
