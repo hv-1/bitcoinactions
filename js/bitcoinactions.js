@@ -152,7 +152,7 @@ var bitsocket = {
   on: function(type, cb) {
     bitsocket.events[type] = cb;
   }
-}
+};
 
 
 bitsocket.open('');
@@ -203,9 +203,8 @@ bitsocket.on("message", function(m) {
 				newTX(true, txData);	
 		//	}, 10);
 	
-	}
-
-}) // Subscribe
+	};
+}); // Subscribe
 
 function memorySizeOf(obj) {
     var bytes = 0;
@@ -246,12 +245,11 @@ function memorySizeOf(obj) {
     return sizeOf(obj);
 };
 
-
 async function load_bit_files () {
 	//var bitcoinfiles = new bitcoinfiles();
 	//b_file_result = await bitcoinfiles.getFile('408d3b99a06afd01e1717d78a7a9d2ee1c08f59003022429ae9b0a66075dfd40');
 	loadingGif.src =  "assets/loading.gif";	
-}
+};
 	
 var carBitCoin_ref = 'https://whatsonchain.com/tx/';  // + item.id;
 
@@ -337,7 +335,7 @@ function init(){
 		init_sounds();
 	});
 
-}
+};
 
 var audioElement = null;
 var mp3Source =  '<source src="' + './media/cha-ching' + '.mp3" type="audio/mp3">';
@@ -358,13 +356,13 @@ function init_sounds() {
 	//getCookie('user-setting-blockSound') !== 'off') {
      // playSound();
   // }
-}
+};
 
 function getCookie (name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
  	console.log('cookie: ', v);
   return v ? v[2] : null;
-}
+};
 
 async function playSound () {
 	if (!SOUND_ON) return;
@@ -379,9 +377,9 @@ async function playSound () {
       })
     }
   } catch (err) {
-	console.log('Error play sound:', err)
+	console.log('Error play sound:', err);
   }
-}
+};
 
 
 function show(id, value) {
@@ -495,10 +493,11 @@ function fetch_Twetch() {
 				"memorySize": 0  // find out
 			};
 			if (!add_)  newTX(true, txData); 
-        }
+        };
         //var twetch_sdk = new twetchjs();
 		if (!twetch_sdk) twetch_sdk = new twetchjs();
-		const response = await twetch_sdk.query(`            query {
+		
+		const response = await twetch_sdk.query(`  query {
                 allPosts( 	first: 18,
 							orderBy: CREATED_AT_DESC
 				) 
@@ -519,9 +518,8 @@ function fetch_Twetch() {
 				d +=1;
 			}
         }
-
 	})();
-}
+};
 
 let poll_lock = false;
 
@@ -591,7 +589,7 @@ function blockNotify(data, isBitCoin){
 	setTimeout(() => {
 		updatePriceData();
 	}, 8000);
-}
+};
 
 //  https://api.whatsonchain.com/v1/bsv/main/block/height/648520 <height>
 // {"hash":"000000000000000000701cffdf682064629d809297f351f6558980c2f9c6322a","confirmations":5,"size":8147778,"height":648520,"version":541065216,"versionHex":"20400000","merkleroot":"3c71f4a1254f2adae193269238a22cb79e0a7a8cd6a2126c46ed5035dc49ceb6","txcount":39281,"tx":
@@ -639,14 +637,14 @@ function fetch_block_data (height) {
 	}
 	xhr.open('GET', 'https://api.whatsonchain.com/v1/bsv/main/block/height/'+height, true);
 	xhr.send();
-}
+};
 
 //gets latest utx count and sets it to signs
 function updateMempoolData(){
 	// https://api.whatsonchain.com/v1/bsv/main/mempool/raw  or https://api.whatsonchain.com/v1/bsv/main/tx
 	//let bsv_url =  "https://whatsonchain.com/block-height/646558";
 	getPoolData( urlWhatsonchain_pool, true);
-}
+};
 
 // retrieve pool information for signs
 function getPoolData(url, isBitCoin){
@@ -789,11 +787,11 @@ function createVehicle(type, txInfo, lane, isBitCoin){
 		width = width*1.6;
 	}
 	let memorySize = txInfo.memorySize;
-	if (memorySize > 20000) {
+	if (memorySize > 50000) {
 		height = SINGLE_LANE * 1.4;
 		width = width*1.3;	
 	 	lane = lane - SINGLE_LANE*0.003;
-	} else if (memorySize > 5000) {
+	} else if (memorySize > 10000) {
 		height = SINGLE_LANE * 1.23;
 		width = width*1.1;	
 		lane = lane - SINGLE_LANE*0.002;
@@ -803,11 +801,11 @@ function createVehicle(type, txInfo, lane, isBitCoin){
 	if (arr.length > 0){
 		let d = 0;
 		arr.forEach((key) => {
-			if (width >= key.x && lane == key.lane){
-				x = key.x - width*1.5 - d;
-				d += width/10;
+			if (width >= key.x && Math.round(lane) == key.lane){
+				x = key.x - width*2 - d;
+				d += width/7;
 			}
-			if (key == carTwetch) x =x - 2*width;
+			if (key == carTwetch) x = x - 2*width;
 		});
 	}
 	
@@ -1061,9 +1059,9 @@ function drawVehicles(arr){
 	let car = null;
 	let y = -1000;
 	let width = 0;
-	let isBitCoin = true;
+	//let isBitCoin = true;
 	let count = 0;
-	if (SPEED < 12) SPEED += blocks_posi/100000;
+	if (SPEED < 12) SPEED += blocks_posi/500000;
 	if (BOUNTY_VISIBLE) {
 		wrapText(ctx, "Collect with your special car >>", WIDTH - 120, BOUNTY_LANE*SINGLE_LANE - SINGLE_LANE*.5, 80, 11);
 		BOUNTY_X = WIDTH - 50;
@@ -1073,10 +1071,9 @@ function drawVehicles(arr){
 	//console.log(' - *****  ' + last_blocks.length);
 	let last_with = 0;
 	for (let i = 0; i<= 10; i++) {
-		if (blocks_posi< WIDTH/2) blocks_posi += 0.1/(1+blocks_posi);
+		if (blocks_posi< WIDTH/2) blocks_posi += 0.1/(10+blocks_posi);
 		last_blocks.forEach(e => {
-		if ( BSV_BLOCKS - e.block -i == 0) { 
-			
+		if ( BSV_BLOCKS - e.block -i == 0) { 	
 			if (e.size > 100000000) {
 				ctx.drawImage(buildingLarge, WIDTH - 150 - blocks_posi - last_with, HEIGHT - SINGLE_LANE*2.2,  buildingLarge.width/10, buildingLarge.height/10);
 				//link_Text(ctx,'https://whatsonchain.com/block-height/'+ e.block, 
@@ -1110,7 +1107,7 @@ function drawVehicles(arr){
 			}
 		}
 		});	
-	}
+	} // block paint loop
 	
 	arr.slice().reverse().forEach(function(item, index, object){
 		if (item.x > WIDTH + 200 || item.lane < 1) return; 
@@ -1120,21 +1117,19 @@ function drawVehicles(arr){
 			car = item.car;
 		}
 		let intro = -car.width - SPEED;
-		if (!item.isBitCoin) intro = -car.width - SPEED * SPEED_MODIFIER; // a twetch ?
+		if (!item.isBitCoin) intro = -car.width - SPEED * SPEED_MODIFIER; // not yet
 		if (item.x > intro){
 			if (!item.isPlaying){
 				addTxToList(item, car);
 			}
 			item.isPlaying = true;
-
 			y = (item.lane * SINGLE_LANE) - SINGLE_LANE;
 			width = item.width;  //SINGLE_LANE * (car.width / car.height) ;  //+ item.width/car.width;
 
 			if (item.isBitCoin){
 				if (  item.donation || car == carTwetch || car == carPeerGame || car == carSatoPlay ) {
 					if (count % 1000 == 1)  BOUNTY_VISIBLE = true; //BOUNTY_LANE = Math.floor(Math.random() * 10) + 4;
-					y = (1.6 * SINGLE_LANE) ; //- SINGLE_LANE;
-					//item.x += SPEED / 2; 
+					y = (1.6 * SINGLE_LANE) ; 
 					if (item.x >= WIDTH / 2 &&  item.x < WIDTH) { // stop for some blocks
 						if(car == carTwetch || car == cloud) {
 							item.x -= SPEED / 5; 
@@ -1153,18 +1148,16 @@ function drawVehicles(arr){
 					} else {
 						item.y -= 1;
 					}
-				} else if (item.lane == 4 || item.lane == 10 || item.lane == 13) {  // special slow down
-					item.x -= 2;
+				} else if (Math.round(item.lane) == 4 || Math.round(item.lane) == 10 || Math.round(item.lane) == 13) {  // special slow down
+					item.x -= 1;
 					if (item.x >= WIDTH / 6) {
-						item.x -= 0.8;
+						item.x -= 0.6;
 					}
 					if (item.x >= WIDTH / 4) {
-						item.x -= 0.4;
+						item.x -= 0.3;
 					}					
 					if (item.x >= 4 * WIDTH / 5 ) {
 						item.x -= 0.2; // SPEED ; // - transactionShowList.childNodes.length/20;
-						//item.x += 3.2;
-						//console.log(" speed " + item.x);
 					}
 				}
 			}
@@ -1172,12 +1165,10 @@ function drawVehicles(arr){
 				ctx.font = "10pt";  //" Verdana";
 				ctx.drawImage(car, item.x, y + SINGLE_LANE*0.8, width*0.35 , item.h*0.35);
 				let cy = y+item.x*1.7 + item.lane* SINGLE_LANE/10;
-				//let cyt = y+item.x;
 				if(cy >= SINGLE_LANE*12 || item.x >= WIDTH/3  ) {
 					cy = SINGLE_LANE*12 ;  // for the bounce ...
 					if(item.x >= WIDTH/3 ){ 
 						cy = (SINGLE_LANE+10.5)*12 - 1.52*item.lane*SINGLE_LANE - item.lane/( WIDTH/3 - item.x -SINGLE_LANE)*item.x*SINGLE_LANE/4;  // what hack ...
-						//if (item.x < WIDTH / 2  - SPEED) item.x += SPEED / SINGLE_LANE;
 					}
 				}
 				ctx.drawImage(cloud, item.x, cy, width, item.h*1.9);
@@ -1202,10 +1193,10 @@ function drawVehicles(arr){
 		// move sprites
 		if(car == carTwetch || car == cloud) {
 			if (item.x < WIDTH / 2 ) item.x += SPEED / 5;
-		} else if(item.isBitCoin && car != carTwetch){
+		} else if(item.isBitCoin){
 			item.x += SPEED;
 			count += 1;
-		} else {
+		} else {  // not needed atm
 			let spd = SPEED * SPEED_MODIFIER;
 			item.x += spd;
 			isBitCoin = false; // why ?
@@ -1213,7 +1204,7 @@ function drawVehicles(arr){
 	});
 
 //$(window).load(function() {
-  $('img').each(function() {
+$('img').each(function() {
     if ( !this.complete
     ||   typeof this.naturalWidth == "undefined"
     ||   this.naturalWidth == 0     
@@ -1223,8 +1214,8 @@ function drawVehicles(arr){
 		//console.log('New error: ' + this.onerror);
       	if ( !this.complete) this.src = carTwetch.src;
     }
-  })
-}
+  });
+};
 
 // remove vehicles that are off the map
 function removeVehicles(){
@@ -1239,7 +1230,7 @@ function removeVehicles(){
 		if (item.donation) SPEED = 6;
 		if (item.x > WIDTH + 100) object.splice(index, 1);
 	});
-}
+};
 
 // animate everything - auto-  repeated
 function animate(){
@@ -1247,7 +1238,7 @@ function animate(){
 	ctx.clearRect(0,0,WIDTH,HEIGHT);
 	drawVehicles(txBitCoin);
 	removeVehicles();
-}
+};
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
 // When the user scrolls to the top of the page, slide up the navbar (50px out of the top view)
@@ -1269,13 +1260,12 @@ if(mobileCheck()) {
 
 function mobileCheck(){
 	let check = false;
-	(function(a,b){
+	(function(a){
 		if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))
 			check=true;
-	})(navigator.userAgent||navigator.vendor||window.opera);
+	}) (navigator.userAgent || navigator.vendor || window.opera);
 	return check;
-}
-
+};
 
 function onReady(callback) {
     let intervalID = window.setInterval(checkReady, 1500);
@@ -1285,8 +1275,8 @@ function onReady(callback) {
             window.clearInterval(intervalID);
             callback.call(this);
         }
-    }
-}
+    };
+};
 
-
+// start
 init();

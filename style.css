@@ -689,7 +689,7 @@ img.logo-label {
 }
 
 .bitCoin {
-  background: url('assets/bg/bsv.jpg') no-repeat center 68%;
+  background: url('assets/bg/bitcoin-sv-logo.png') no-repeat center 68%;
   background-size: 12.5%;
   height: 53.36%;
   width: 100%;
@@ -1406,7 +1406,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .txinfo-cash{
-  background: #fff url('assets/bg/bsv.jpg') no-repeat 5px center;
+  background: #fff url('assets/bg/bitcoin-sv-logo.png') no-repeat 5px center;
   white-space: pre;
   border-bottom: solid 2px #F0952D;
   background-size:24px;
@@ -1429,7 +1429,6 @@ input[type=range]:focus::-ms-fill-upper {
   padding:5px;
 }
 .txinfo-core:before {
-
 }
 
 
@@ -1622,11 +1621,9 @@ input[type=range]:focus::-ms-fill-upper {
       border-radius: 0 0 5px 5px;
       padding: 2px 0;
     }
-
     .fees-toll.fees-btc, .fees-btc {
       right:12%;
     }
-
     .fees-toll.fees-btc #fees-btc {
       top:43%;
     }
@@ -1684,7 +1681,6 @@ input[type=range]:focus::-ms-fill-upper {
     left:5px;
     top:245px;
     }
-
   #tw-list-button {
     right:auto;
     left:5px;
